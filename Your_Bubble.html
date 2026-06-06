@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Bubble</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+  <link rel="stylesheet" href="Your_Bubble.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lobster+Two:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+  <link rel="icon" href="logo.png" type="image/x-icon">
+</head>
+<body>
+ 
+  <!-- Survey Step 1 -->
+  <div id="surveyStep1" class="screen">
+    <form id="surveyForm1" class="login-form">
+      <div class="survey-header">
+        <div class="bubble-icon"><i class="fas fa-comment"></i></div>
+        <h2 class="lobster-two-regular">Welcome to Your Bubble</h2>
+      </div>
+      <div class="field-group">
+        <div class="question-label">
+          <span class="q-num">Q1</span>
+          <span class="q-text">What should we call you?</span>
+        </div>
+        <input type="text" id="userName" placeholder="Username" required>
+      </div>
+      <button type="submit" class="btn-primary">Next</button>
+      <div class="progress-dots">
+        <span class="progress-dot active"></span>
+        <span class="progress-dot"></span>
+        <span class="progress-dot"></span>
+      </div>
+    </form>
+  </div>
+ 
+  <!-- Survey Step 2 -->
+  <div id="surveyStep2" class="screen hidden">
+    <form id="surveyForm2" class="login-form">
+      <div class="survey-header">
+        <div class="bubble-icon"><i class="fas fa-comment"></i></div>
+      </div>
+      <div class="field-group">
+        <div class="question-label">
+          <span class="q-num">Q2</span>
+          <span class="q-text">What is your age group?</span>
+        </div>
+        <div class="choice-grid">
+          <label class="choice-card"><input type="radio" name="age" value="under18"><span>Under 18</span></label>
+          <label class="choice-card"><input type="radio" name="age" value="18-25"><span>18–25</span></label>
+          <label class="choice-card"><input type="radio" name="age" value="26+"><span>26+</span></label>
+        </div>
+      </div>
+      <div class="field-group">
+        <div class="question-label">
+          <span class="q-num">Q3</span>
+          <span class="q-text">What do you struggle with the most?</span>
+        </div>
+        <div class="choice-grid">
+          <label class="choice-card"><input type="radio" name="struggle" value="substance_use"><span>Substance use</span></label>
+          <label class="choice-card"><input type="radio" name="struggle" value="behavioral_impulse_control"><span>Behavioral impulse control</span></label>
+          <label class="choice-card"><input type="radio" name="struggle" value="anxiety"><span>Anxiety</span></label>
+          <label class="choice-card"><input type="radio" name="struggle" value="stress"><span>Stress</span></label>
+                    <label class="choice-card"><input type="radio" name="struggle" value="other"><span>Other</span></label>
+        </div>
+      </div>
+      <div class="field-group">
+        <div class="question-label">
+          <span class="q-num">Q4</span>
+          <span class="q-text">What usually helps?</span>
+        </div>
+        <div class="choice-grid">
+          <label class="choice-card"><input type="checkbox" name="help" value="journaling"><span>Journaling</span></label>
+          <label class="choice-card"><input type="checkbox" name="help" value="talking_it_out"><span>Talking it out</span></label>
+          <label class="choice-card"><input type="checkbox" name="help" value="breathing_exercises"><span>Breathing</span></label>
+          <label class="choice-card"><input type="checkbox" name="help" value="distraction"><span>Distraction</span></label>
+          <label class="choice-card"><input type="checkbox" name="help" value="movement"><span>Movement or Exercise</span></label>
+          <label class="choice-card"><input type="checkbox" name="help" value="community"><span>Community support</span></label>
+          <label class="choice-card"><input type="checkbox" name="help" value="motivation"><span>Motivation or Affirmation</span></label>
+          <label class="choice-card"><input type="checkbox" name="help" value="music"><span>Music</span></label>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button type="button" class="btn-primary" id="PreviousStep1">Previous</button>
+        <button type="submit" class="btn-primary">Next</button>
+      </div>
+      <div class="progress-dots">
+        <span class="progress-dot"></span>
+        <span class="progress-dot active"></span>
+        <span class="progress-dot"></span>
+      </div>
+    </form>
+  </div>
+ 
+  <!-- Survey Step 3 -->
+  <div id="surveyStep3" class="screen hidden">
+    <form id="surveyForm3" class="login-form">
+      <div class="survey-header">
+        <div class="bubble-icon"><i class="fas fa-comment"></i></div>
+        <h2>Emergency Contact</h2>
+        <p class="survey-subtitle">Please include the contact information for someone you trust</p>
+      </div>
+      <div class="field-group">
+        <div class="question-label"><span class="q-num">Q5</span><span class="q-text">Emergency contact name</span></div>
+        <input type="text" id="emergencyName" placeholder="e.g. Mom, John..." required>
+      </div>
+      <div class="field-group">
+        <div class="question-label"><span class="q-num">Q6</span><span class="q-text">Emergency contact phone number</span></div>
+        <input type="tel" id="emergencyPhone" placeholder="e.g. +1 555 000 0000" required>
+      </div>
+      <div class="field-group">
+        <div class="question-label"><span class="q-num">Q7</span><span class="q-text">Please select your country to determine the emergency number</span></div>
+        <select id="userCountry">
+          <option value="US">🇺🇸 United States (911)</option>
+          <option value="UK">🇬🇧 United Kingdom (999)</option>
+          <option value="EU">🇪🇺 Europe (112)</option>
+          <option value="AU">🇦🇺 Australia (000)</option>
+          <option value="CA">🇨🇦 Canada (911)</option>
+          <option value="MX">🇲🇽 Mexico (911)</option>
+          <option value="IN">🇮🇳 India (112)</option>
+          <option value="BR">🇧🇷 Brazil (190)</option>
+          <option value="JP">🇯🇵 Japan (110)</option>
+          <option value="ZA">🇿🇦 South Africa (10111)</option>
+        </select>
+      </div>
+      <div class="btn-row">
+        <button type="button" class="btn-primary" id="PreviousStep2">Previous</button>
+        <button type="submit" class="btn-primary">Submit</button>
+      </div>
+      <div class="progress-dots">
+        <span class="progress-dot"></span>
+        <span class="progress-dot"></span>
+        <span class="progress-dot active"></span>
+      </div>
+    </form>
+  </div>
+ 
+  <!-- Main website -->
+  <div id="homeScreen" class="screen hidden" data-theme="default">
+ 
+    <!-- Navbar -->
+    <nav class="navbar">
+      <button id="openSideNav" class="hamburger-btn">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="nav-logo lobster-two-regular">Your Bubble</div>
+      <div class="nav-actions">
+        <button id="settingsBtn" class="nav-btn" title="Settings">
+          <i class="fas fa-gear"></i>
+        </button>
+      </div>
+    </nav>
+ <!-- Side nav overlay -->
+<div id="sideNavOverlay" class="side-nav-overlay hidden"></div>
+
+<!-- Side nav panel -->
+<div id="sideNav" class="side-nav hidden">
+  <div class="side-nav-header">
+    <img src="logo.png" alt="Your Bubble" class="side-nav-logo">
+    <button id="closeSideNav" class="side-nav-close">✕</button>
+  </div>
+  <nav class="side-nav-links">
+    <button class="side-nav-btn" id="navJournaling">
+      <span class="side-nav-icon">📓</span> Journaling
+    </button>
+    <button class="side-nav-btn" id="navBreathing">
+      <span class="side-nav-icon">🌬️</span> Breathing Exercises
+    </button>
+    <button class="side-nav-btn" id="navDistraction">
+      <span class="side-nav-icon">🎮</span> Distraction & Games
+    </button>
+    <button class="side-nav-btn" id="navMovement">
+      <span class="side-nav-icon">🏃</span> Movement & Exercise
+    </button>
+    <button class="side-nav-btn" id="navCommunity">
+      <span class="side-nav-icon">🤝</span> Community Support
+    </button>
+    <button class="side-nav-btn" id="navTalking">
+      <span class="side-nav-icon">💬</span> Talking It Out
+    </button>
+  </nav>
+</div>
+    <!-- Settings Panel -->
+    <div id="settingsPanel" class="settings-panel hidden">
+      <h3>Settings</h3>
+      <div class="settings-section">
+        <p class="settings-label">Background theme</p>
+        <div class="theme-grid">
+          <button class="theme-btn active" data-theme="default"><span class="theme-preview" style="background:linear-gradient(135deg,#2D1B5E,#6B4FBF)"></span><span>Default</span></button>
+          <button class="theme-btn" data-theme="forest"><span class="theme-preview" style="background:linear-gradient(135deg,#0D2B1A,#2E7D32)"></span><span>Forest</span></button>
+          <button class="theme-btn" data-theme="ocean"><span class="theme-preview" style="background:linear-gradient(135deg,#0D2B3A,#0277BD)"></span><span>Ocean</span></button>
+          <button class="theme-btn" data-theme="sunset"><span class="theme-preview" style="background:linear-gradient(135deg,#3D1C1C,#B05040)"></span><span>Sunset</span></button>
+          <button class="theme-btn" data-theme="night"><span class="theme-preview" style="background:linear-gradient(135deg,#0A0A1A,#1A237E)"></span><span>Night</span></button>
+          <button class="theme-btn" data-theme="lavender"><span class="theme-preview" style="background:linear-gradient(135deg,#3B1F3A,#C084A0)"></span><span>Lavender</span></button>
+          <button class="theme-btn" data-theme="sunrise"><span class="theme-preview" style="background:linear-gradient(135deg,#9B59F5,#FF9B4E)"></span><span>Sunrise</span></button>
+          <button class="theme-btn" data-theme="electric"><span class="theme-preview" style="background:linear-gradient(135deg,#7B4FE0,#00E5FF)"></span><span>Electric</span></button>
+          <button class="theme-btn" data-theme="flame"><span class="theme-preview" style="background:linear-gradient(135deg,#FF3B30,#FF9B4E)"></span><span>Flame</span></button>
+          <button class="theme-btn" data-theme="royal"><span class="theme-preview" style="background:linear-gradient(135deg,#1A3FCC,#CC66FF)"></span><span>Royal</span></button>
+          <button class="theme-btn" data-theme="aqua"><span class="theme-preview" style="background:linear-gradient(135deg,#00D4E8,#0052CC)"></span><span>Aqua</span></button>
+          <button class="theme-btn" data-theme="cottoncandy"><span class="theme-preview" style="background:linear-gradient(135deg,#5B8EFF,#FF66CC)"></span><span>Cotton Candy</span></button>
+          <button class="theme-btn" data-theme="limesplash"><span class="theme-preview" style="background:linear-gradient(135deg,#00CCE8,#FFE600)"></span><span>Lime Splash</span></button>
+          <button class="theme-btn" data-theme="golden"><span class="theme-preview" style="background:linear-gradient(135deg,#FFD000,#FF9B4E)"></span><span>Golden</span></button>
+          <button class="theme-btn" data-theme="mintcloud"><span class="theme-preview" style="background:linear-gradient(135deg,#B8FFD4,#99BBFF)"></span><span>Mint Cloud</span></button>
+          <button class="theme-btn" data-theme="midnight"><span class="theme-preview" style="background:linear-gradient(135deg,#000000,#2B2BE8)"></span><span>Midnight</span></button>
+          <button class="theme-btn" data-theme="mystic"><span class="theme-preview" style="background:linear-gradient(135deg,#9B33CC,#FFB800)"></span><span>Mystic</span></button>
+          <button class="theme-btn" data-theme="meadow"><span class="theme-preview" style="background:linear-gradient(135deg,#66DD44,#CCEE66)"></span><span>Meadow</span></button>
+          <button class="theme-btn" data-theme="softblush"><span class="theme-preview" style="background:linear-gradient(135deg,#FFFAAA,#FF99EE)"></span><span>Soft Blush</span></button>
+        </div>
+      </div>
+      <div class="settings-section">
+        <p class="settings-label">Emergency number country</p>
+        <select id="countrySwitch">
+          <option value="US">🇺🇸 United States (911)</option>
+          <option value="UK">🇬🇧 United Kingdom (999)</option>
+          <option value="EU">🇪🇺 Europe (112)</option>
+          <option value="AU">🇦🇺 Australia (000)</option>
+          <option value="CA">🇨🇦 Canada (911)</option>
+          <option value="MX">🇲🇽 Mexico (911)</option>
+          <option value="IN">🇮🇳 India (112)</option>
+          <option value="BR">🇧🇷 Brazil (190)</option>
+          <option value="JP">🇯🇵 Japan (110)</option>
+          <option value="ZA">🇿🇦 South Africa (10111)</option>
+        </select>
+      </div>
+      <div class="settings-section">
+        <p class="settings-label">Account</p>
+        <button id="editFormBtn" class="btn-secondary">Edit my responses</button>
+        <button id="signOutBtn" class="btn-secondary sign-out-btn">Sign out</button>
+      </div>
+      <button id="closeSettings" class="btn-secondary">Done</button>
+    </div>
+ 
+    <!-- Main content -->
+    <div class="home-content">
+ 
+      <!-- Welcome + Calendar -->
+      <div class="welcome-and-calendar">
+        <div class="welcome-block">
+          <p class="welcome-label">Nice to see you,</p>
+          <h1 class="welcome-name" id="welcomeName">!</h1>
+          <!-- in welcome-block, after welcomeName -->
+          <p class="welcome-affirmation" id="welcomeAffirmation"></p>
+        </div>
+        <div class="mini-calendar" id="miniCalendar">
+          <div class="cal-header">
+            <button class="cal-nav" id="calPrev">&#8249;</button>
+            <span class="cal-title" id="calTitle"></span>
+            <button class="cal-nav" id="calNext">&#8250;</button>
+          </div>
+          <div class="cal-grid" id="calGrid"></div>
+        </div>
+      </div>
+ 
+      <!-- Log detail overlay -->
+      <div id="logOverlay" class="overlay hidden">
+        <div class="overlay-card">
+          <h3 id="logOverlayDate"></h3>
+          <div id="logOverlayContent"></div>
+          <button class="overlay-close" id="closeLogOverlay">Close</button>
+        </div>
+      </div>
+ 
+      <!-- Mood card -->
+      <div class="moodcard">
+        <p class="mood-prompt">How are you feeling today?</p>
+        <button id="notOkayBtn" class="btn-not-okay">I'm not okay</button>
+ 
+        <!-- Step 1: General mood -->
+        <div id="moodStep1">
+          <div class="mood-grid">
+            <button class="mood-card" data-mood="very-unpleasant" data-label="Very Unpleasant">
+              <span class="mood-emoji">😣</span><span class="mood-label">Very Unpleasant</span>
+            </button>
+            <button class="mood-card" data-mood="unpleasant" data-label="Unpleasant">
+              <span class="mood-emoji">😔</span><span class="mood-label">Unpleasant</span>
+            </button>
+            <button class="mood-card" data-mood="neutral" data-label="Neutral">
+              <span class="mood-emoji">😐</span><span class="mood-label">Neutral</span>
+            </button>
+            <button class="mood-card" data-mood="pleasant" data-label="Pleasant">
+              <span class="mood-emoji">🙂</span><span class="mood-label">Pleasant</span>
+            </button>
+            <button class="mood-card" data-mood="very-pleasant" data-label="Very Pleasant">
+              <span class="mood-emoji">😄</span><span class="mood-label">Very Pleasant</span>
+            </button>
+             <button class="mood-card" data-mood="Other" data-label="Other">
+              <span class="mood-emoji">🤔</span><span class="mood-label">Other</span>
+            </button>
+          </div>
+        </div>
+ 
+        <!-- Step 2: Specific mood -->
+        <div id="moodStep2" class="hidden">
+          <p class="mood-sub-prompt">More specifically, you feel...</p>
+          <div class="mood-grid" id="specificMoodGrid"></div>
+          <button class="mood-back-btn" id="moodBackBtn">← Back</button>
+        </div>
+ 
+        <!-- Step 3: Elaborate -->
+        <div id="moodStep3" class="hidden">
+          <p class="mood-sub-prompt">Would you like to share more about how you're feeling?</p>
+          <div class="mood-date-row">
+            <label class="mood-date-label">📅 Log date</label>
+            <input type="date" id="moodDatePicker">
+          </div>
+          <textarea id="moodElaboration" placeholder="It's okay to take your time... write as much or as little as you'd like." rows="4"></textarea>
+          <button class="btn-primary" id="moodSubmitBtn">Log my mood</button>
+          <button class="btn-primary" id="moodSkipBtn">Skip</button>
+          <button class="mood-back-btn" id="moodBackBtn2">← Back</button>
+        </div>
+ 
+        <!-- Step 4: Confirmation -->
+        <div id="moodStep4" class="hidden">
+          <div class="mood-confirm">
+            <span class="mood-confirm-icon">💜</span>
+            <p class="mood-confirm-text" id="moodConfirmText"></p>
+            <p class="mood-confirm-sub">Your feelings are valid. Take care of yourself today.</p>
+            <button class="mood-back-btn" id="moodResetBtn">Log again</button>
+          </div>
+        </div>
+ 
+        <p class="mood-selected hidden" id="moodSelected">
+          You're feeling <strong id="moodValue">–</strong>
+        </p>
+      </div>
+ 
+      <!-- Check-in Question-->
+      <div class="checkin-card">
+        <p class="checkin-question" id="checkinQuestion"></p>
+        <textarea id="response" name="response" rows="3" placeholder="Type your thoughts here..."></textarea>
+        <button class="btn-primary" id="checkinSubmitBtn">Submit</button>
+        <p class="checkin-confirm hidden" id="checkinConfirm">✓ Response saved!</p>
+      </div>
+ 
+    </div>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+      <p class="footer-message">Take it easy</p>
+      <!-- <p class="footer-submessage">One moment at a time.</p> -->
+      <div class="footer-links">
+        <button id="feedbackBtn">Give feedback</button>
+        <button id="aboutBtn">About Your Bubble</button>
+        <button id="footerSupportBtn">Get support</button>
+      </div>
+    </footer>
+
+    <!-- About overlay -->
+    <div id="aboutOverlay" class="overlay hidden">
+      <div class="overlay-card">
+        <h3>About Your Bubble</h3>
+        <p>
+          Your Bubble is a gentle space for checking in, grounding, and finding
+          a little support when a moment feels heavy.
+        </p>
+        <p class="about-note">
+          It is a supportive tool, not a replacement for professional care or emergency services.
+        </p>
+        <button class="overlay-close" id="closeAboutBtn">Close</button>
+      </div>
+    </div>
+ 
+    <!-- "I'm not okay" overlay -->
+    <div id="notOkayOverlay" class="overlay hidden">
+      <div class="overlay-card">
+        <h3>You're not alone 💙</h3>
+        <p>What would help right now?</p>
+        <div class="overlay-options">
+          <button class="overlay-btn" id="callContactBtn"><span class="overlay-icon">🤝</span>Call or text my emergency contact</button>
+          <button class="overlay-btn" id="callEmergencyBtn"><span class="overlay-icon">📞</span>Call emergency services</button>
+          <button class="overlay-btn" id="breathingBtn"><span class="overlay-icon">🌬️</span>Breathe</button>
+          <button class="overlay-btn" id="distractionBtn"><span class="overlay-icon">🎮</span>Distraction</button>
+        </div>
+        <button class="overlay-close" id="closeOverlay">I'm okay now</button>
+      </div>
+    </div>
+ 
+    <!-- Floating emergency button -->
+    <button id="emergencyFab" class="emergency-fab" title="Emergency">
+      <i class="fas fa-exclamation-triangle"></i>
+    </button>
+
+    <!-- Floating music button -->
+    <button id="musicFab" class="music-fab" title="Open grounding sounds" aria-label="Open grounding sounds">
+      <i class="fas fa-music"></i>
+    </button>
+
+    <!-- Music panel -->
+    <div id="musicPanel" class="music-panel hidden">
+      <div class="music-panel-inner">
+        <div class="music-panel-header">
+          <div>
+            <p class="music-eyebrow">Grounding sounds</p>
+            <h3 id="musicNowPlaying">Choose a sound</h3>
+          </div>
+          <button id="closeMusicPanel" class="music-close-btn" aria-label="Close music player">✕</button>
+        </div>
+        <p class="music-description">Soft, wordless soundscapes generated inside Your Bubble.</p>
+        <div class="soundscape-list">
+          <button class="soundscape-btn" data-sound="rain">
+            <span class="soundscape-icon">☂</span>
+            <span><strong>Quiet Rain</strong><small>Light, steady texture</small></span>
+          </button>
+          <button class="soundscape-btn" data-sound="waves">
+            <span class="soundscape-icon">≈</span>
+            <span><strong>Soft Waves</strong><small>Slow, rolling sound</small></span>
+          </button>
+          <button class="soundscape-btn" data-sound="warm">
+            <span class="soundscape-icon">○</span>
+            <span><strong>Warm Glow</strong><small>Low, peaceful tones</small></span>
+          </button>
+        </div>
+        <div class="music-controls">
+          <button id="musicPlayPause" class="music-play-btn" disabled>
+            <i class="fas fa-play"></i>
+            <span>Play</span>
+          </button>
+          <label class="volume-control">
+            <span>Volume</span>
+            <input id="musicVolume" type="range" min="0" max="100" value="28">
+          </label>
+        </div>
+        <p class="music-note">Sound never starts automatically.</p>
+      </div>
+    </div>
+ 
+    <!-- Emergency panel -->
+    <div id="emergencyPanel" class="emergency-panel hidden">
+      <div class="emergency-panel-inner">
+        <h3>Emergency</h3>
+        <p id="emergencyPanelContact">Contact: —</p>
+        <div class="overlay-options">
+          <button class="overlay-btn danger" id="fabCallEmergency"><span class="overlay-icon">🚑</span>Call <span id="emergencyNumberDisplay">911</span></button>
+          <button class="overlay-btn" id="fabCallContact"><span class="overlay-icon">📞</span>Call contact</button>
+          <button class="overlay-btn" id="fabTextContact"><span class="overlay-icon">💬</span>Text contact</button>
+        </div>
+        <button class="overlay-close" id="closeEmergencyPanel">Close</button>
+      </div>
+    </div>
+ 
+  </div><!-- end homeScreen -->
+ 
+  <script src="Your_Bubble.js"></script>
+</body>
+</html>

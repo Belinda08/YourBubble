@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Breathe — Your Bubble</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="icon" href="logo.png" type="image/x-icon">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: #2D1B5E;
+      color: #EDE8FF;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* ── Theme backgrounds ── */
+    body[data-theme="forest"]      { background: #0D2B1A; }
+    body[data-theme="ocean"]       { background: #0D2B3A; }
+    body[data-theme="sunset"]      { background: #3D1C1C; }
+    body[data-theme="night"]       { background: #0A0A1A; }
+    body[data-theme="lavender"]    { background: #3B1F3A; }
+    body[data-theme="sunrise"]     { background: linear-gradient(135deg,#9B59F5,#FF9B4E); }
+    body[data-theme="electric"]    { background: linear-gradient(135deg,#7B4FE0,#00E5FF); }
+    body[data-theme="flame"]       { background: linear-gradient(135deg,#FF3B30,#FF9B4E); }
+    body[data-theme="royal"]       { background: linear-gradient(135deg,#1A3FCC,#CC66FF); }
+    body[data-theme="aqua"]        { background: linear-gradient(135deg,#00D4E8,#0052CC); }
+    body[data-theme="cottoncandy"] { background: linear-gradient(135deg,#5B8EFF,#FF66CC); }
+    body[data-theme="limesplash"]  { background: linear-gradient(135deg,#00CCE8,#FFE600); }
+    body[data-theme="golden"]      { background: linear-gradient(135deg,#FFD000,#FF9B4E); }
+    body[data-theme="mintcloud"]   { background: linear-gradient(135deg,#B8FFD4,#99BBFF); }
+    body[data-theme="midnight"]    { background: linear-gradient(135deg,#000000,#2B2BE8); }
+    body[data-theme="mystic"]      { background: linear-gradient(135deg,#9B33CC,#FFB800); }
+    body[data-theme="meadow"]      { background: linear-gradient(135deg,#66DD44,#CCEE66); }
+    body[data-theme="softblush"]   { background: linear-gradient(135deg,#FFFAAA,#FF99EE); }
+
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    #backBtn {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      padding: 8px 18px;
+      background: rgba(107, 79, 191, 0.35);
+      color: #E8DFFE;
+      border: 1px solid rgba(155, 138, 212, 0.4);
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 14px;
+      font-family: inherit;
+      z-index: 10;
+      transition: background 0.2s;
+    }
+
+    #backBtn:hover {
+      background: rgba(107, 79, 191, 0.55);
+    }
+
+    #skipBtn {
+      position: absolute;
+      bottom: 30px;
+      right: 30px;
+      padding: 8px 18px;
+      background: rgba(107, 79, 191, 0.35);
+      color: #E8DFFE;
+      border: 1px solid rgba(155, 138, 212, 0.4);
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 14px;
+      font-family: inherit;
+      z-index: 10;
+      transition: background 0.2s;
+    }
+
+    #skipBtn:hover {
+      background: rgba(107, 79, 191, 0.55);
+    }
+
+    #doneMsg {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      z-index: 10;
+    }
+
+    #doneMsg p {
+      font-size: 22px;
+      color: #EDE8FF;
+      font-weight: 300;
+    }
+
+    #doneMsg small {
+      font-size: 14px;
+      color: rgba(255,255,255,0.5);
+    }
+
+    #backHomeBtn {
+      padding: 12px 28px;
+      background: #6B4FBF;
+      color: #EDE8FF;
+      border: none;
+      border-radius: 20px;
+      font-size: 15px;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    #backHomeBtn:hover { background: #4E3DA8; }
+  </style>
+</head>
+<body>
+
+  <canvas id="bubbleCanvas"></canvas>
+  <button id="backBtn">← Back</button>
+  <button id="skipBtn">Skip</button>
+
+  <div id="doneMsg">
+    <p>Well done 💜</p>
+    <small>Take a moment to notice how you feel.</small>
+    <button id="backHomeBtn">Back to home</button>
+  </div>
+
+  <script>
+    // ── Apply saved theme ─────────────────────────────
+    const savedTheme = localStorage.getItem('theme') || 'default';
+    document.body.dataset.theme = savedTheme;
+
+    // ── Canvas setup ──────────────────────────────────
+    const canvas = document.getElementById('bubbleCanvas');
+    const ctx = canvas.getContext('2d');
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    // ── Breathing config ──────────────────────────────
+    const CYCLE      = 12000;
+    const PHASE_IN   = 0.33;
+    const PHASE_HOLD = 0.50;
+    const NUM_CYCLES = 3;
+
+    const gradColors = [
+      { r: 155, g: 138, b: 212 },
+      { r: 107, g: 79,  b: 191 },
+      { r: 78,  g: 61,  b: 168 },
+      { r: 45,  g: 27,  b: 94  },
+      { r: 197, g: 180, b: 255 },
+    ];
+
+    function lerpColor(a, b, t) {
+      return {
+        r: Math.round(a.r + (b.r - a.r) * t),
+        g: Math.round(a.g + (b.g - a.g) * t),
+        b: Math.round(a.b + (b.b - a.b) * t),
+      };
+    }
+
+    function getGradColor(t) {
+      t = Math.max(0, Math.min(1, t));
+      const scaled = t * (gradColors.length - 1);
+      const i = Math.min(Math.floor(scaled), gradColors.length - 2);
+      const c = lerpColor(gradColors[i], gradColors[i + 1], scaled - i);
+      return `rgb(${c.r},${c.g},${c.b})`;
+    }
+
+    let smallBalls = [];
+    function initSmallBalls() {
+      smallBalls = [];
+      for (let i = 0; i < 7; i++) {
+        smallBalls.push({
+          angle:    (i / 7) * Math.PI * 2,
+          baseDist: 130 + Math.random() * 50,
+          size:     24,
+          colorT:   0.1,
+          phase:    Math.random() * Math.PI * 2,
+        });
+      }
+    }
+    initSmallBalls();
+
+    function easeInOut(t) {
+      return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+    }
+
+    function getBreathProgress(elapsed) {
+      const t = (elapsed % CYCLE) / CYCLE;
+      if (t < PHASE_IN)   return easeInOut(t / PHASE_IN);
+      if (t < PHASE_HOLD) return 1;
+      return easeInOut(1 - (t - PHASE_HOLD) / (1 - PHASE_HOLD));
+    }
+
+    function drawLabel(elapsed) {
+      const t = (elapsed % CYCLE) / CYCLE;
+      let label;
+      if (t < PHASE_IN)        label = 'Breathe in...';
+      else if (t < PHASE_HOLD) label = 'Hold...';
+      else                     label = 'Breathe out...';
+
+      ctx.font = '18px Nunito, sans-serif';
+      ctx.fillStyle = 'rgba(255,255,255,0.6)';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(label, canvas.width / 2, canvas.height / 2 + 160);
+    }
+
+    function drawBall(x, y, r, colorT) {
+      if (r < 1) return;
+      const grad = ctx.createRadialGradient(
+        x - r * 0.25, y - r * 0.25, r * 0.1,
+        x, y, r
+      );
+      grad.addColorStop(0, getGradColor(Math.min(colorT + 0.25, 1)));
+      grad.addColorStop(1, getGradColor(colorT));
+      ctx.beginPath();
+      ctx.arc(x, y, r, 0, Math.PI * 2);
+      ctx.fillStyle = grad;
+      ctx.globalAlpha = 0.92;
+      ctx.fill();
+      ctx.globalAlpha = 1;
+    }
+
+    let startTime = null;
+    let animId    = null;
+    let finished  = false;
+
+    function breatheAnimate(ts) {
+      if (!startTime) startTime = ts;
+      const elapsed = ts - startTime;
+
+      if (!finished && elapsed >= CYCLE * NUM_CYCLES) {
+        finished = true;
+        cancelAnimationFrame(animId);
+        showDone();
+        return;
+      }
+
+      const progress = getBreathProgress(elapsed);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      const cx = canvas.width / 2;
+      const cy = canvas.height / 2;
+
+      for (const b of smallBalls) {
+        const shrink = 1 - progress * 0.72;
+        const dist   = b.baseDist * (1 - progress * 0.78);
+        const wobble = Math.sin(elapsed * 0.0008 + b.phase) * 6;
+        const bx = cx + Math.cos(b.angle + elapsed * 0.0003) * (dist + wobble);
+        const by = cy + Math.sin(b.angle + elapsed * 0.0003) * (dist + wobble);
+        drawBall(bx, by, b.size * shrink, b.colorT);
+      }
+
+      drawBall(cx, cy, 60 + progress * 80, 0.4 + progress * 0.3);
+      drawLabel(elapsed);
+
+      animId = requestAnimationFrame(breatheAnimate);
+    }
+
+    animId = requestAnimationFrame(breatheAnimate);
+
+    // ── Done screen ───────────────────────────────────
+    function showDone() {
+      document.getElementById('skipBtn').style.display = 'none';
+      const msg = document.getElementById('doneMsg');
+      msg.style.display = 'flex';
+    }
+
+    // ── Buttons ───────────────────────────────────────
+    document.getElementById('skipBtn').addEventListener('click', () => {
+      if (animId) cancelAnimationFrame(animId);
+      showDone();
+    });
+
+    document.getElementById('backBtn').addEventListener('click', () => {
+      if (animId) cancelAnimationFrame(animId);
+      window.location.href = 'Your_Bubble.html';
+    });
+
+    document.getElementById('backHomeBtn').addEventListener('click', () => {
+      window.location.href = 'Your_Bubble.html';
+    });
+  </script>
+</body>
+</html>

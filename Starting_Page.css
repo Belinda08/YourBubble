@@ -1,0 +1,322 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: sans-serif;
+}
+
+/* ── Screen base ── */
+.screen {
+  position: absolute;
+  width: 100%;
+  height: 100vh;
+  transition: opacity .6s ease;
+  z-index: 0;
+}
+
+.visible {
+  opacity: 1;
+  pointer-events: auto;
+  z-index: 1;
+}
+
+.hidden {
+  opacity: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.auth-logo {
+  width: 150px;
+  margin-bottom: 8px;
+  filter: drop-shadow(0 4px 16px rgba(107, 79, 191, 0.4));
+}
+
+.auth-title {
+  color: #EDE8FF;
+  font-size: 36px;
+  margin-bottom: 20px;
+}
+
+.auth-welcome {
+  color: #E8DFFE;
+  font-size: 18px;
+  font-weight: 400;
+  margin-bottom: 4px;
+}
+
+/* ── Breathing screen ── */
+#breathingScreen {
+  height: 100vh;
+  background: #2D1B5E;
+  color: #E8DFFE;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.circle {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #9B8AD4, #6B4FBF);
+  animation: breathe 12s 3 ease-in-out;
+  margin: auto;
+}
+
+#text {
+  margin-top: 40px;
+  color: #C9B8F4;
+  font-size: 18px;
+  letter-spacing: 0.04em;
+}
+
+@keyframes breathe {
+  0%   { transform: scale(1); }
+  33%  { transform: scale(1.5); }
+  50%  { transform: scale(1.5); }
+  100% { transform: scale(1); }
+}
+
+#skipBtn {
+  position: absolute;
+  bottom: 30px;
+  right: 30px;
+  padding: 8px 18px;
+  background: rgba(107, 79, 191, 0.35);
+  color: #E8DFFE;
+  border: 1px solid rgba(155, 138, 212, 0.4);
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.2s;
+}
+
+#skipBtn:hover {
+  background: rgba(107, 79, 191, 0.55);
+}
+
+/* ── Auth choice screen ── */
+#authChoiceScreen {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: #2D1B5E;
+}
+
+.authChoice-form {
+  padding: 36px 40px;
+  background: rgba(78, 61, 168, 0.35);
+  border: 1px solid rgba(155, 138, 212, 0.3);
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.authChoice-form h1 {
+  margin-bottom: 12px;
+  color: #E8DFFE;
+  font-size: 22px;
+  font-weight: 400;
+}
+
+#authChoiceScreen button {
+  width: 180px;
+  margin: 6px 0;
+  padding: 12px 20px;
+  border-radius: 10px;
+  border: none;
+  background: #6B4FBF;
+  color: #EDE8FF;
+  cursor: pointer;
+  font-size: 15px;
+  transition: background 0.2s;
+}
+
+#authChoiceScreen button:hover {
+  background: #4E3DA8;
+}
+
+/* ── Login screen ── */
+#loginScreen {
+  position: absolute;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #2D1B5E;
+}
+
+.login-form {
+  padding: 36px 40px;
+  background: rgba(78, 61, 168, 0.35);
+  border: 1px solid rgba(155, 138, 212, 0.3);
+  border-radius: 16px;
+  min-width: 300px;
+}
+
+.login-form h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #E8DFFE;
+  font-weight: 400;
+}
+
+.login-form input {
+  width: 100%;
+  padding: 10px 14px;
+  margin: 8px 0;
+  border-radius: 8px;
+  border: 1px solid rgba(155, 138, 212, 0.4);
+  background: rgba(45, 27, 94, 0.6);
+  color: #EDE8FF;
+  font-size: 15px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.login-form input::placeholder {
+  color: #9B8AD4;
+}
+
+.login-form input:focus {
+  border-color: #9B8AD4;
+}
+
+.login-form button {
+  width: 100%;
+  padding: 11px;
+  margin-top: 12px;
+  border: none;
+  border-radius: 8px;
+  background: #6B4FBF;
+  color: #EDE8FF;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.login-form button:hover {
+  background: #4E3DA8;
+}
+
+/* ── Sign up screen ── */
+#signupScreen {
+  position: absolute;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #2D1B5E;
+}
+
+.signup-form {
+  padding: 36px 40px;
+  background: rgba(78, 61, 168, 0.35);
+  border: 1px solid rgba(155, 138, 212, 0.3);
+  border-radius: 16px;
+  min-width: 300px;
+}
+
+.signup-form h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #E8DFFE;
+  font-weight: 400;
+}
+
+.signup-form input {
+  width: 100%;
+  padding: 10px 14px;
+  margin: 8px 0;
+  border-radius: 8px;
+  border: 1px solid rgba(155, 138, 212, 0.4);
+  background: rgba(45, 27, 94, 0.6);
+  color: #EDE8FF;
+  font-size: 15px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.signup-form input::placeholder {
+  color: #9B8AD4;
+}
+
+.signup-form input:focus {
+  border-color: #9B8AD4;
+}
+
+.signup-form button {
+  width: 100%;
+  padding: 11px;
+  margin-top: 12px;
+  border: none;
+  border-radius: 8px;
+  background: #6B4FBF;
+  color: #EDE8FF;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.signup-form button:hover {
+  background: #4E3DA8;
+}
+
+/* ── App screen ── */
+#appscreen {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #2D1B5E;
+}
+
+/* ── Error message ── */
+.error {
+  color: #F4A4A4;
+  font-size: 13px;
+  text-align: center;
+  margin-top: 8px;
+}
+
+/* ── Fonts ── */
+
+.google-sans-text {
+  font-family: "Google Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  font-variation-settings:
+    "GRAD" 0;
+}
+
+.lobster-two-regular {
+  font-family: "Lobster Two", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.lobster-two-bold {
+  font-family: "Lobster Two", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.lobster-two-regular-italic {
+  font-family: "Lobster Two", sans-serif;
+  font-weight: 400;
+  font-style: italic;
+}
+
+.lobster-two-bold-italic {
+  font-family: "Lobster Two", sans-serif;
+  font-weight: 700;
+  font-style: italic;
+}

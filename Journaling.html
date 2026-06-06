@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Journal — Your Bubble</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lobster+Two:ital,wght@0,400;0,700&family=Nunito:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="icon" href="logo.png" type="image/x-icon">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: #2D1B5E;
+      color: #EDE8FF;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Navbar ── */
+    .navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 24px;
+      background: rgba(20, 10, 50, 0.75);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .back-btn {
+      background: none;
+      border: none;
+      color: rgba(255,255,255,0.6);
+      font-size: 20px;
+      cursor: pointer;
+      padding: 6px 10px;
+      border-radius: 8px;
+      transition: background 0.2s, color 0.2s;
+      font-family: inherit;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+    }
+
+    .back-btn:hover {
+      background: rgba(255,255,255,0.08);
+      color: #EDE8FF;
+    }
+
+    .nav-logo {
+      font-family: 'Lobster Two', sans-serif;
+      font-size: 22px;
+      color: #EDE8FF;
+    }
+
+    .nav-date {
+      font-size: 13px;
+      color: rgba(255,255,255,0.5);
+    }
+
+    /* ── Main layout ── */
+    .journal-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      max-width: 780px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 32px 24px 24px;
+      gap: 20px;
+    }
+
+    /* ── Prompt ── */
+    .journal-prompt {
+      font-size: 26px;
+      font-weight: 300;
+      color: #EDE8FF;
+      letter-spacing: 0.01em;
+      line-height: 1.3;
+    }
+
+    .journal-prompt span {
+      color: rgba(255,255,255,0.4);
+    }
+
+    /* ── Textarea ── */
+    .journal-textarea {
+      flex: 1;
+      min-height: 52vh;
+      width: 100%;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 18px;
+      padding: 24px 28px;
+      color: #EDE8FF;
+      font-size: 16px;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 400;
+      line-height: 1.8;
+      resize: none;
+      outline: none;
+      transition: border-color 0.2s, background 0.2s;
+      caret-color: #9B8AD4;
+    }
+
+    .journal-textarea::placeholder {
+      color: rgba(255,255,255,0.25);
+      font-style: italic;
+    }
+
+    .journal-textarea:focus {
+      border-color: rgba(155,138,212,0.5);
+      background: rgba(255,255,255,0.08);
+    }
+
+    /* ── Word count ── */
+    .word-count {
+      text-align: right;
+      font-size: 12px;
+      color: rgba(255,255,255,0.3);
+      margin-top: -12px;
+      padding-right: 4px;
+    }
+
+    /* ── Action buttons ── */
+    .journal-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .btn-save {
+      padding: 13px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.2);
+      background: rgba(255,255,255,0.07);
+      color: #EDE8FF;
+      font-size: 15px;
+      font-family: inherit;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s;
+    }
+
+    .btn-save:hover {
+      background: rgba(255,255,255,0.12);
+      border-color: rgba(255,255,255,0.3);
+    }
+
+    .btn-submit {
+      padding: 13px;
+      border-radius: 12px;
+      border: none;
+      background: #6B4FBF;
+      color: #EDE8FF;
+      font-size: 15px;
+      font-family: inherit;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-submit:hover { background: #4E3DA8; }
+
+    /* ── Save status ── */
+    .save-status {
+      text-align: center;
+      font-size: 13px;
+      color: rgba(255,255,255,0.4);
+      min-height: 18px;
+      transition: opacity 0.3s;
+    }
+
+    .save-status.success { color: #A8F4B8; }
+
+    /* ── View previous ── */
+    .view-previous-btn {
+      display: block;
+      margin: 0 auto;
+      background: none;
+      border: none;
+      color: rgba(255,255,255,0.5);
+      font-size: 14px;
+      font-family: inherit;
+      cursor: pointer;
+      padding: 10px 20px;
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.15);
+      transition: background 0.2s, color 0.2s;
+      margin-bottom: 8px;
+    }
+
+    .view-previous-btn:hover {
+      background: rgba(255,255,255,0.07);
+      color: #EDE8FF;
+    }
+
+    /* ── Previous entries panel ── */
+    .entries-panel {
+      display: none;
+      flex-direction: column;
+      gap: 12px;
+      padding-bottom: 32px;
+    }
+
+    .entries-panel.open { display: flex; }
+
+    .entries-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.6);
+      text-align: center;
+      padding: 8px 0 4px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      font-size: 12px;
+    }
+
+    .entry-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 14px;
+      padding: 18px 20px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .entry-card:hover { background: rgba(255,255,255,0.09); }
+
+    .entry-card-date {
+      font-size: 12px;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 6px;
+    }
+
+    .entry-card-preview {
+      font-size: 14px;
+      color: rgba(255,255,255,0.75);
+      line-height: 1.5;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .no-entries {
+      text-align: center;
+      color: rgba(255,255,255,0.3);
+      font-size: 14px;
+      font-style: italic;
+      padding: 20px 0;
+    }
+
+    /* ── Entry detail overlay ── */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(10,5,30,0.8);
+      backdrop-filter: blur(6px);
+      z-index: 300;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .overlay.hidden { display: none; }
+
+    .overlay-card {
+      background: #1E1040;
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 20px;
+      padding: 32px 28px;
+      max-width: 600px;
+      width: 100%;
+      max-height: 80vh;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .overlay-date {
+      font-size: 13px;
+      color: rgba(255,255,255,0.4);
+    }
+
+    .overlay-text {
+      font-size: 15px;
+      color: #EDE8FF;
+      line-height: 1.8;
+      white-space: pre-wrap;
+    }
+
+    .overlay-close {
+      padding: 11px;
+      border: none;
+      border-radius: 10px;
+      background: rgba(107,79,191,0.4);
+      color: #EDE8FF;
+      font-size: 14px;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-top: 8px;
+    }
+
+    .overlay-close:hover { background: #6B4FBF; }
+
+    /* ── Divider ── */
+    .divider {
+      border: none;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      margin: 4px 0;
+    }
+    body { background: #2D1B5E; }
+body[data-theme="forest"]      { background: #0D2B1A; }
+body[data-theme="ocean"]       { background: #0D2B3A; }
+body[data-theme="sunset"]      { background: #3D1C1C; }
+body[data-theme="night"]       { background: #0A0A1A; }
+body[data-theme="lavender"]    { background: #3B1F3A; }
+body[data-theme="sunrise"]     { background: linear-gradient(135deg,#9B59F5,#FF9B4E); }
+body[data-theme="electric"]    { background: linear-gradient(135deg,#7B4FE0,#00E5FF); }
+body[data-theme="flame"]       { background: linear-gradient(135deg,#FF3B30,#FF9B4E); }
+body[data-theme="royal"]       { background: linear-gradient(135deg,#1A3FCC,#CC66FF); }
+body[data-theme="aqua"]        { background: linear-gradient(135deg,#00D4E8,#0052CC); }
+body[data-theme="cottoncandy"] { background: linear-gradient(135deg,#5B8EFF,#FF66CC); }
+body[data-theme="limesplash"]  { background: linear-gradient(135deg,#00CCE8,#FFE600); }
+body[data-theme="golden"]      { background: linear-gradient(135deg,#FFD000,#FF9B4E); }
+body[data-theme="mintcloud"]   { background: linear-gradient(135deg,#B8FFD4,#99BBFF); }
+body[data-theme="midnight"]    { background: linear-gradient(135deg,#000000,#2B2BE8); }
+body[data-theme="mystic"]      { background: linear-gradient(135deg,#9B33CC,#FFB800); }
+body[data-theme="meadow"]      { background: linear-gradient(135deg,#66DD44,#CCEE66); }
+body[data-theme="softblush"]   { background: linear-gradient(135deg,#FFFAAA,#FF99EE); }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <button class="back-btn" onclick="window.location.href='Your_Bubble.html'">
+      ← Back
+    </button>
+    <div class="nav-logo">Your Bubble</div>
+    <div class="nav-date" id="todayDate"></div>
+  </nav>
+
+  <!-- Main -->
+  <div class="journal-container">
+
+    <h1 class="journal-prompt">What's on your mind<span>?</span></h1>
+
+    <textarea
+      class="journal-textarea"
+      id="journalText"
+      placeholder="There's no right or wrong way to do this. Just write..."></textarea>
+
+    <div class="word-count" id="wordCount">0 words</div>
+
+    <div class="journal-actions">
+      <button class="btn-save" id="saveBtn">Save Draft</button>
+      <button class="btn-submit" id="submitBtn">Submit Entry</button>
+    </div>
+
+    <div class="save-status" id="saveStatus"></div>
+
+    <hr class="divider">
+
+    <button class="view-previous-btn" id="viewPreviousBtn">
+      View previous entries ↓
+    </button>
+
+    <div class="entries-panel" id="entriesPanel">
+      <div class="entries-title">Previous Entries</div>
+      <div id="entriesList"></div>
+    </div>
+
+  </div>
+
+  <!-- Entry detail overlay -->
+  <div class="overlay hidden" id="entryOverlay">
+    <div class="overlay-card">
+      <div class="overlay-date" id="overlayDate"></div>
+      <div class="overlay-text" id="overlayText"></div>
+      <button class="overlay-close" id="closeOverlay">Close</button>
+    </div>
+  </div>
+
+  <script>
+    // ── Date display ──────────────────────────────────
+    const today = new Date();
+    document.getElementById('todayDate').textContent = today.toLocaleDateString('en-US', {
+      weekday: 'long', month: 'long', day: 'numeric'
+    });
+
+    // ── Word count ────────────────────────────────────
+    const textarea = document.getElementById('journalText');
+    const wordCount = document.getElementById('wordCount');
+
+    textarea.addEventListener('input', () => {
+      const words = textarea.value.trim().split(/\s+/).filter(w => w.length > 0);
+      wordCount.textContent = `${words.length} word${words.length !== 1 ? 's' : ''}`;
+    });
+
+    // ── Load draft ────────────────────────────────────
+    const draft = localStorage.getItem('journalDraft');
+    if (draft) {
+      textarea.value = draft;
+      textarea.dispatchEvent(new Event('input'));
+    }
+
+    // ── Save draft ────────────────────────────────────
+    function showStatus(msg, success = true) {
+      const el = document.getElementById('saveStatus');
+      el.textContent = msg;
+      el.className = 'save-status' + (success ? ' success' : '');
+      setTimeout(() => { el.textContent = ''; el.className = 'save-status'; }, 3000);
+    }
+
+    document.getElementById('saveBtn').addEventListener('click', () => {
+      const text = textarea.value.trim();
+      if (!text) { showStatus('Nothing to save yet.', false); return; }
+      localStorage.setItem('journalDraft', text);
+      showStatus('✓ Draft saved!');
+    });
+
+    // ── Submit entry ──────────────────────────────────
+    document.getElementById('submitBtn').addEventListener('click', () => {
+      const text = textarea.value.trim();
+      if (!text) { showStatus('Write something first.', false); return; }
+
+      const dateStr = new Date().toLocaleDateString('en-US', {
+        weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+      });
+      const timeStr = new Date().toLocaleTimeString('en-US', {
+        hour: '2-digit', minute: '2-digit'
+      });
+
+      const entries = JSON.parse(localStorage.getItem('journalEntries') || '[]');
+      entries.unshift({ text, date: dateStr, time: timeStr });
+      localStorage.setItem('journalEntries', JSON.stringify(entries));
+      localStorage.removeItem('journalDraft');
+
+      textarea.value = '';
+      wordCount.textContent = '0 words';
+      showStatus('✓ Entry submitted!');
+      renderEntries();
+    });
+
+    // ── View previous entries ─────────────────────────
+    let panelOpen = false;
+
+    document.getElementById('viewPreviousBtn').addEventListener('click', () => {
+      panelOpen = !panelOpen;
+      const panel = document.getElementById('entriesPanel');
+      const btn   = document.getElementById('viewPreviousBtn');
+      if (panelOpen) {
+        panel.classList.add('open');
+        btn.textContent = 'Hide previous entries ↑';
+        renderEntries();
+      } else {
+        panel.classList.remove('open');
+        btn.textContent = 'View previous entries ↓';
+      }
+    });
+
+    function renderEntries() {
+      const entries = JSON.parse(localStorage.getItem('journalEntries') || '[]');
+      const list = document.getElementById('entriesList');
+      list.innerHTML = '';
+
+      if (entries.length === 0) {
+        list.innerHTML = '<p class="no-entries">No entries yet. Your first one is waiting to be written.</p>';
+        return;
+      }
+
+      entries.forEach((entry, i) => {
+        const card = document.createElement('div');
+        card.className = 'entry-card';
+        card.innerHTML = `
+          <div class="entry-card-date">${entry.date} · ${entry.time}</div>
+          <div class="entry-card-preview">${entry.text}</div>
+        `;
+        card.addEventListener('click', () => openEntry(entry));
+        list.appendChild(card);
+      });
+    }
+
+    // ── Entry detail overlay ──────────────────────────
+    function openEntry(entry) {
+      document.getElementById('overlayDate').textContent = `${entry.date} · ${entry.time}`;
+      document.getElementById('overlayText').textContent = entry.text;
+      document.getElementById('entryOverlay').classList.remove('hidden');
+    }
+
+    document.getElementById('closeOverlay').addEventListener('click', () => {
+      document.getElementById('entryOverlay').classList.add('hidden');
+    });
+    // ── Apply saved theme ─────────────────────────────
+  const navBgs = {
+  default: 'rgba(20,10,50,0.75)',
+  forest: 'rgba(5,18,10,0.8)',
+  ocean: 'rgba(5,15,25,0.8)',
+  sunset: 'rgba(25,8,8,0.8)',
+  night: 'rgba(2,2,10,0.85)',
+  lavender: 'rgba(20,8,20,0.8)',
+  sunrise: 'rgba(80,20,140,0.75)',
+  electric: 'rgba(40,20,120,0.75)',
+  flame: 'rgba(140,20,10,0.75)',
+  royal: 'rgba(10,20,100,0.75)',
+  aqua: 'rgba(0,60,120,0.75)',
+  cottoncandy: 'rgba(30,40,140,0.75)',
+  limesplash: 'rgba(0,80,80,0.75)',
+  golden: 'rgba(120,70,0,0.75)',
+  mintcloud: 'rgba(40,100,80,0.6)',
+  midnight: 'rgba(0,0,20,0.85)',
+  mystic: 'rgba(60,10,80,0.75)',
+  meadow: 'rgba(30,90,10,0.7)',
+  softblush: 'rgba(120,80,80,0.55)',};
+
+function applyTheme(theme) {
+  document.body.dataset.theme = theme;
+  document.querySelector('.navbar').style.background = navBgs[theme] || navBgs.default;
+}
+
+const savedTheme = localStorage.getItem('theme') || 'default';
+applyTheme(savedTheme);
+  </script>
+</body>
+</html>

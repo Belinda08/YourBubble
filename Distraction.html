@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Distraction & Games - Your Bubble</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lobster+Two:wght@400;700&family=Nunito:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="icon" href="logo.png" type="image/x-icon">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --nav-bg: rgba(20,10,50,0.75);
+      --panel-bg: rgba(255,255,255,0.07);
+      --panel-border: rgba(255,255,255,0.13);
+      --text: #EDE8FF;
+      --muted: rgba(255,255,255,0.55);
+      --accent: #9B8AD4;
+      --accent-strong: #6B4FBF;
+    }
+
+    body {
+      min-height: 100vh;
+      background: #2D1B5E;
+      color: var(--text);
+      font-family: 'Nunito', sans-serif;
+    }
+
+    body[data-theme="forest"]      { background: #0D2B1A; --nav-bg: rgba(5,18,10,0.8); }
+    body[data-theme="ocean"]       { background: #0D2B3A; --nav-bg: rgba(5,15,25,0.8); }
+    body[data-theme="sunset"]      { background: #3D1C1C; --nav-bg: rgba(25,8,8,0.8); }
+    body[data-theme="night"]       { background: #0A0A1A; --nav-bg: rgba(2,2,10,0.85); }
+    body[data-theme="lavender"]    { background: #3B1F3A; --nav-bg: rgba(20,8,20,0.8); }
+    body[data-theme="sunrise"]     { background: linear-gradient(135deg,#9B59F5,#FF9B4E); --nav-bg: rgba(80,20,140,0.75); }
+    body[data-theme="electric"]    { background: linear-gradient(135deg,#7B4FE0,#00E5FF); --nav-bg: rgba(40,20,120,0.75); }
+    body[data-theme="flame"]       { background: linear-gradient(135deg,#FF3B30,#FF9B4E); --nav-bg: rgba(140,20,10,0.75); }
+    body[data-theme="royal"]       { background: linear-gradient(135deg,#1A3FCC,#CC66FF); --nav-bg: rgba(10,20,100,0.75); }
+    body[data-theme="aqua"]        { background: linear-gradient(135deg,#00D4E8,#0052CC); --nav-bg: rgba(0,60,120,0.75); }
+    body[data-theme="cottoncandy"] { background: linear-gradient(135deg,#5B8EFF,#FF66CC); --nav-bg: rgba(30,40,140,0.75); }
+    body[data-theme="limesplash"]  { background: linear-gradient(135deg,#00CCE8,#FFE600); --nav-bg: rgba(0,80,80,0.75); }
+    body[data-theme="golden"]      { background: linear-gradient(135deg,#FFD000,#FF9B4E); --nav-bg: rgba(120,70,0,0.75); }
+    body[data-theme="mintcloud"]   { background: linear-gradient(135deg,#B8FFD4,#99BBFF); --nav-bg: rgba(40,100,80,0.6); }
+    body[data-theme="midnight"]    { background: linear-gradient(135deg,#000000,#2B2BE8); --nav-bg: rgba(0,0,20,0.85); }
+    body[data-theme="mystic"]      { background: linear-gradient(135deg,#9B33CC,#FFB800); --nav-bg: rgba(60,10,80,0.75); }
+    body[data-theme="meadow"]      { background: linear-gradient(135deg,#66DD44,#CCEE66); --nav-bg: rgba(30,90,10,0.7); }
+    body[data-theme="softblush"]   { background: linear-gradient(135deg,#FFFAAA,#FF99EE); --nav-bg: rgba(120,80,80,0.55); }
+
+    button {
+      font: inherit;
+    }
+
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      padding: 14px 24px;
+      background: var(--nav-bg);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    .back-btn,
+    .quiet-btn {
+      width: fit-content;
+      padding: 7px 11px;
+      border: 0;
+      border-radius: 9px;
+      background: transparent;
+      color: rgba(255,255,255,0.65);
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .back-btn:hover,
+    .quiet-btn:hover {
+      background: rgba(255,255,255,0.08);
+      color: var(--text);
+    }
+
+    .nav-logo {
+      font-family: 'Lobster Two', sans-serif;
+      font-size: 22px;
+    }
+
+    .nav-right {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .shell {
+      width: min(920px, 100%);
+      margin: 0 auto;
+      padding: 42px 24px 56px;
+    }
+
+    .intro {
+      margin-bottom: 28px;
+    }
+
+    .eyebrow {
+      margin-bottom: 7px;
+      color: rgba(255,255,255,0.48);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      font-size: clamp(30px, 5vw, 42px);
+      font-weight: 300;
+      letter-spacing: -0.02em;
+    }
+
+    .intro-copy {
+      max-width: 610px;
+      margin-top: 9px;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    .mode-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .mode-card {
+      min-height: 230px;
+      padding: 25px;
+      border: 1px solid var(--panel-border);
+      border-radius: 22px;
+      background: var(--panel-bg);
+      color: var(--text);
+      text-align: left;
+      cursor: pointer;
+      transition: transform 0.2s, background 0.2s, border-color 0.2s;
+    }
+
+    .mode-card:hover {
+      transform: translateY(-3px);
+      background: rgba(255,255,255,0.11);
+      border-color: rgba(255,255,255,0.25);
+    }
+
+    .mode-art {
+      position: relative;
+      display: block;
+      width: 112px;
+      height: 82px;
+      margin-bottom: 20px;
+    }
+
+    .preview-bubble {
+      position: absolute;
+      display: block;
+      border: 1px solid rgba(255,255,255,0.5);
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 30% 25%, rgba(255,255,255,0.88) 0 7%, transparent 9%),
+        radial-gradient(circle at 40% 38%, rgba(209,196,255,0.75), rgba(107,79,191,0.56) 62%, rgba(255,255,255,0.18));
+      box-shadow: inset -7px -8px 15px rgba(45,27,94,0.2), 0 5px 16px rgba(20,10,50,0.16);
+    }
+
+    .preview-bubble:nth-child(1) { width: 62px; height: 62px; left: 4px; top: 8px; }
+    .preview-bubble:nth-child(2) { width: 42px; height: 42px; left: 62px; top: 0; }
+    .preview-bubble:nth-child(3) { width: 31px; height: 31px; left: 72px; top: 48px; }
+
+    .memory-card .preview-bubble:nth-child(2) {
+      box-shadow: 0 0 0 7px rgba(197,180,255,0.16), 0 0 28px rgba(222,212,255,0.85);
+      filter: brightness(1.4);
+    }
+
+    .mode-title {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 21px;
+      font-weight: 500;
+    }
+
+    .mode-description {
+      display: block;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .mode-note {
+      display: block;
+      margin-top: 18px;
+      color: rgba(255,255,255,0.42);
+      font-size: 12px;
+    }
+
+    .game-screen {
+      display: none;
+    }
+
+    .game-screen.active {
+      display: block;
+      animation: fade-in 0.3s ease;
+    }
+
+    .menu-screen.hidden {
+      display: none;
+    }
+
+    @keyframes fade-in {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .game-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 16px;
+    }
+
+    .game-title {
+      font-size: 25px;
+      font-weight: 400;
+    }
+
+    .game-instruction {
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .game-status {
+      min-width: 120px;
+      padding-top: 5px;
+      color: rgba(255,255,255,0.62);
+      font-size: 13px;
+      text-align: right;
+    }
+
+    .playfield {
+      position: relative;
+      height: min(62vh, 560px);
+      min-height: 390px;
+      overflow: hidden;
+      border: 1px solid var(--panel-border);
+      border-radius: 24px;
+      background:
+        radial-gradient(circle at 50% 100%, rgba(155,138,212,0.17), transparent 48%),
+        rgba(17,8,45,0.19);
+      box-shadow: inset 0 0 60px rgba(20,10,50,0.13);
+      isolation: isolate;
+    }
+
+    .playfield::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      opacity: 0.35;
+      background-image: radial-gradient(rgba(255,255,255,0.22) 0.7px, transparent 0.7px);
+      background-size: 27px 27px;
+    }
+
+    .bubble {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      border: 1px solid rgba(255,255,255,0.48);
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 31% 25%, rgba(255,255,255,0.92) 0 6%, transparent 8%),
+        radial-gradient(circle at 38% 36%, rgba(219,208,255,0.82), rgba(123,92,207,0.64) 62%, rgba(255,255,255,0.2));
+      box-shadow:
+        inset -10px -12px 22px rgba(45,27,94,0.22),
+        inset 7px 7px 18px rgba(255,255,255,0.15),
+        0 7px 22px rgba(20,10,50,0.18);
+      color: white;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+      transition: filter 0.18s, box-shadow 0.18s;
+    }
+
+    .bubble:hover {
+      filter: brightness(1.12);
+    }
+
+    .pop-bubble {
+      animation: float-up var(--float-time) linear forwards;
+    }
+
+    .pop-bubble.reduced-motion {
+      animation: none;
+    }
+
+    @keyframes float-up {
+      from { transform: translateY(50px) scale(0.88); opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      to { transform: translateY(-610px) scale(1.05); opacity: 0; }
+    }
+
+    .bubble.popping {
+      pointer-events: none;
+      animation: pop 0.24s ease-out forwards;
+    }
+
+    @keyframes pop {
+      0% { transform: scale(1); opacity: 1; }
+      55% { transform: scale(1.28); opacity: 0.72; }
+      100% { transform: scale(0.25); opacity: 0; }
+    }
+
+    .memory-grid {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(2, 1fr);
+      gap: clamp(18px, 4vw, 42px);
+      padding: clamp(32px, 7vw, 72px);
+    }
+
+    .memory-bubble {
+      position: relative;
+      align-self: center;
+      justify-self: center;
+      width: clamp(74px, 13vw, 112px);
+      height: clamp(74px, 13vw, 112px);
+    }
+
+    .memory-bubble.glowing {
+      filter: brightness(1.55);
+      box-shadow:
+        0 0 0 10px rgba(213,201,255,0.12),
+        0 0 35px rgba(229,221,255,0.95),
+        inset -10px -12px 22px rgba(45,27,94,0.12);
+      transform: scale(1.08);
+    }
+
+    .memory-bubble.correct {
+      animation: correct-tap 0.28s ease;
+    }
+
+    .memory-bubble.gentle-miss {
+      animation: gentle-miss 0.28s ease;
+    }
+
+    @keyframes correct-tap {
+      50% { transform: scale(0.88); filter: brightness(1.45); }
+    }
+
+    @keyframes gentle-miss {
+      50% { transform: scale(0.94); opacity: 0.7; }
+    }
+
+    .center-message {
+      position: absolute;
+      left: 50%;
+      bottom: 17px;
+      z-index: 4;
+      width: max-content;
+      max-width: calc(100% - 32px);
+      padding: 8px 14px;
+      border-radius: 20px;
+      background: rgba(20,10,50,0.5);
+      color: rgba(255,255,255,0.7);
+      font-size: 13px;
+      text-align: center;
+      transform: translateX(-50%);
+      backdrop-filter: blur(7px);
+    }
+
+    .game-actions {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 17px;
+    }
+
+    .action-btn {
+      padding: 10px 18px;
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 20px;
+      background: rgba(255,255,255,0.07);
+      color: var(--text);
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .action-btn:hover {
+      background: rgba(255,255,255,0.13);
+    }
+
+    .action-btn.primary {
+      border-color: transparent;
+      background: var(--accent-strong);
+    }
+
+    .action-btn.primary:hover {
+      background: #4E3DA8;
+    }
+
+    .check-in {
+      display: none;
+      max-width: 540px;
+      margin: 30px auto 0;
+      padding: 24px;
+      border: 1px solid var(--panel-border);
+      border-radius: 20px;
+      background: var(--panel-bg);
+      text-align: center;
+    }
+
+    .check-in.visible {
+      display: block;
+      animation: fade-in 0.3s ease;
+    }
+
+    .check-in h2 {
+      font-size: 21px;
+      font-weight: 400;
+    }
+
+    .check-in p {
+      margin: 7px 0 18px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .feeling-options {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .feeling-btn {
+      padding: 9px 16px;
+      border: 1px solid rgba(255,255,255,0.16);
+      border-radius: 18px;
+      background: rgba(255,255,255,0.06);
+      color: var(--text);
+      cursor: pointer;
+    }
+
+    .feeling-btn:hover {
+      background: rgba(255,255,255,0.12);
+    }
+
+    .check-in-response {
+      min-height: 22px;
+      margin-top: 15px;
+      color: rgba(255,255,255,0.62);
+      font-size: 13px;
+    }
+
+    @media (max-width: 640px) {
+      .navbar {
+        padding: 12px 14px;
+      }
+
+      .nav-logo {
+        font-size: 20px;
+      }
+
+      .shell {
+        padding: 30px 16px 40px;
+      }
+
+      .mode-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .mode-card {
+        min-height: 190px;
+      }
+
+      .game-header {
+        flex-direction: column;
+        gap: 5px;
+      }
+
+      .game-status {
+        padding: 0;
+        text-align: left;
+      }
+
+      .playfield {
+        min-height: 430px;
+      }
+
+      .memory-grid {
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: repeat(3, 1fr);
+        padding: 30px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <button class="back-btn" id="backBtn">← Back</button>
+    <div class="nav-logo">Your Bubble</div>
+    <div class="nav-right">
+      <button class="quiet-btn" id="menuBtn" hidden>Choose game</button>
+    </div>
+  </nav>
+
+  <main class="shell">
+    <section class="menu-screen" id="menuScreen">
+      <div class="intro">
+        <p class="eyebrow">A small pause</p>
+        <h1>Give your mind something gentle to do.</h1>
+        <p class="intro-copy">
+          Choose a simple bubble activity. There is no score to beat and no way to lose.
+          Sound stays off so you can use this wherever you are.
+        </p>
+      </div>
+
+      <div class="mode-grid">
+        <button class="mode-card" data-mode="pop">
+          <span class="mode-art" aria-hidden="true">
+            <span class="preview-bubble"></span>
+            <span class="preview-bubble"></span>
+            <span class="preview-bubble"></span>
+          </span>
+          <span class="mode-title">Pop Bubbles</span>
+          <span class="mode-description">
+            Tap slow-floating bubbles and let your hands stay busy for a moment.
+          </span>
+          <span class="mode-note">Calm, open-ended play</span>
+        </button>
+
+        <button class="mode-card memory-card" data-mode="memory">
+          <span class="mode-art" aria-hidden="true">
+            <span class="preview-bubble"></span>
+            <span class="preview-bubble"></span>
+            <span class="preview-bubble"></span>
+          </span>
+          <span class="mode-title">Follow the Glow</span>
+          <span class="mode-description">
+            Watch a short bubble sequence, then gently repeat it from memory.
+          </span>
+          <span class="mode-note">Starts with only two bubbles</span>
+        </button>
+      </div>
+    </section>
+
+    <section class="game-screen" id="popScreen" aria-labelledby="popTitle">
+      <div class="game-header">
+        <div>
+          <h1 class="game-title" id="popTitle">Pop Bubbles</h1>
+          <p class="game-instruction">Tap whichever bubbles catch your attention. Take your time.</p>
+        </div>
+        <div class="game-status" id="popStatus" aria-live="polite">A quiet moment</div>
+      </div>
+
+      <div class="playfield" id="popField" aria-label="Floating bubble play area">
+        <div class="center-message">No timer. No score. Just this moment.</div>
+      </div>
+
+      <div class="game-actions">
+        <button class="action-btn" id="refreshBubblesBtn">New bubbles</button>
+        <button class="action-btn primary finish-btn">I'm ready to pause</button>
+      </div>
+    </section>
+
+    <section class="game-screen" id="memoryScreen" aria-labelledby="memoryTitle">
+      <div class="game-header">
+        <div>
+          <h1 class="game-title" id="memoryTitle">Follow the Glow</h1>
+          <p class="game-instruction">Watch the bubbles light up, then tap them in the same order.</p>
+        </div>
+        <div class="game-status" id="memoryStatus" aria-live="polite">Getting ready...</div>
+      </div>
+
+      <div class="playfield" id="memoryField">
+        <div class="memory-grid" id="memoryGrid" aria-label="Memory bubble play area"></div>
+        <div class="center-message" id="memoryMessage">Let your attention rest on one glow at a time.</div>
+      </div>
+
+      <div class="game-actions">
+        <button class="action-btn" id="replayBtn">Show again</button>
+        <button class="action-btn primary finish-btn">I'm ready to pause</button>
+      </div>
+    </section>
+
+    <section class="check-in" id="checkIn" aria-live="polite">
+      <h2>How does this moment feel now?</h2>
+      <p>There is no right answer. Even a tiny shift counts.</p>
+      <div class="feeling-options">
+        <button class="feeling-btn" data-feeling="lighter">A little lighter</button>
+        <button class="feeling-btn" data-feeling="same">About the same</button>
+        <button class="feeling-btn" data-feeling="support">I need more support</button>
+      </div>
+      <div class="check-in-response" id="checkInResponse"></div>
+      <div class="game-actions">
+        <button class="action-btn" id="playAgainBtn">Play another</button>
+        <button class="action-btn primary" id="homeBtn">Back to home</button>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    document.body.dataset.theme = localStorage.getItem('theme') || 'default';
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const menuScreen = document.getElementById('menuScreen');
+    const popScreen = document.getElementById('popScreen');
+    const memoryScreen = document.getElementById('memoryScreen');
+    const checkIn = document.getElementById('checkIn');
+    const menuBtn = document.getElementById('menuBtn');
+    const popField = document.getElementById('popField');
+    const memoryGrid = document.getElementById('memoryGrid');
+    const memoryStatus = document.getElementById('memoryStatus');
+    const memoryMessage = document.getElementById('memoryMessage');
+
+    let activeMode = null;
+    let popTimers = [];
+    let sequence = [];
+    let playerIndex = 0;
+    let sequenceLength = 2;
+    let acceptingMemoryInput = false;
+    let memoryRunId = 0;
+
+    function showMenu() {
+      stopPopMode();
+      memoryRunId += 1;
+      acceptingMemoryInput = false;
+      activeMode = null;
+      popScreen.classList.remove('active');
+      memoryScreen.classList.remove('active');
+      checkIn.classList.remove('visible');
+      menuScreen.classList.remove('hidden');
+      menuBtn.hidden = true;
+    }
+
+    function showGame(mode) {
+      menuScreen.classList.add('hidden');
+      checkIn.classList.remove('visible');
+      popScreen.classList.toggle('active', mode === 'pop');
+      memoryScreen.classList.toggle('active', mode === 'memory');
+      menuBtn.hidden = false;
+      activeMode = mode;
+
+      if (mode === 'pop') startPopMode();
+      if (mode === 'memory') startMemoryMode();
+    }
+
+    document.querySelectorAll('.mode-card').forEach(card => {
+      card.addEventListener('click', () => showGame(card.dataset.mode));
+    });
+
+    document.getElementById('backBtn').addEventListener('click', () => {
+      if (activeMode || checkIn.classList.contains('visible')) {
+        showMenu();
+      } else {
+        window.location.href = 'Your_Bubble.html';
+      }
+    });
+
+    menuBtn.addEventListener('click', showMenu);
+    document.getElementById('homeBtn').addEventListener('click', () => {
+      window.location.href = 'Your_Bubble.html';
+    });
+    document.getElementById('playAgainBtn').addEventListener('click', showMenu);
+
+    function randomBetween(min, max) {
+      return Math.random() * (max - min) + min;
+    }
+
+    function createPopBubble() {
+      if (activeMode !== 'pop') return;
+
+      const bubble = document.createElement('button');
+      const size = randomBetween(55, 112);
+      const maxLeft = Math.max(10, popField.clientWidth - size - 10);
+      const duration = randomBetween(12, 20);
+
+      bubble.type = 'button';
+      bubble.className = 'bubble pop-bubble';
+      bubble.setAttribute('aria-label', 'Pop bubble');
+      bubble.style.width = size + 'px';
+      bubble.style.height = size + 'px';
+      bubble.style.left = randomBetween(8, maxLeft) + 'px';
+      bubble.style.top = prefersReducedMotion
+        ? randomBetween(20, Math.max(25, popField.clientHeight - size - 20)) + 'px'
+        : (popField.clientHeight - 15) + 'px';
+      bubble.style.setProperty('--float-time', duration + 's');
+      bubble.classList.toggle('reduced-motion', prefersReducedMotion);
+
+      bubble.addEventListener('click', () => {
+        bubble.classList.remove('pop-bubble');
+        bubble.classList.add('popping');
+        document.getElementById('popStatus').textContent = 'Stay with the next bubble';
+        window.setTimeout(() => {
+          bubble.remove();
+          createPopBubble();
+        }, 240);
+      });
+
+      bubble.addEventListener('animationend', event => {
+        if (event.animationName !== 'float-up') return;
+        bubble.remove();
+        createPopBubble();
+      });
+
+      popField.appendChild(bubble);
+    }
+
+    function startPopMode() {
+      stopPopMode();
+      document.getElementById('popStatus').textContent = 'A quiet moment';
+
+      for (let i = 0; i < 8; i++) {
+        const timer = window.setTimeout(createPopBubble, i * 430);
+        popTimers.push(timer);
+      }
+    }
+
+    function stopPopMode() {
+      popTimers.forEach(window.clearTimeout);
+      popTimers = [];
+      popField.querySelectorAll('.pop-bubble, .popping').forEach(bubble => bubble.remove());
+    }
+
+    document.getElementById('refreshBubblesBtn').addEventListener('click', startPopMode);
+
+    function buildMemoryBubbles() {
+      memoryGrid.innerHTML = '';
+      for (let i = 0; i < 6; i++) {
+        const bubble = document.createElement('button');
+        bubble.type = 'button';
+        bubble.className = 'bubble memory-bubble';
+        bubble.dataset.index = i;
+        bubble.setAttribute('aria-label', `Memory bubble ${i + 1}`);
+        bubble.addEventListener('click', handleMemoryTap);
+        memoryGrid.appendChild(bubble);
+      }
+    }
+
+    function startMemoryMode() {
+      memoryRunId += 1;
+      sequenceLength = 2;
+      buildMemoryBubbles();
+      beginMemoryRound();
+    }
+
+    function makeSequence(length) {
+      const next = [];
+      for (let i = 0; i < length; i++) {
+        next.push(Math.floor(Math.random() * 6));
+      }
+      return next;
+    }
+
+    function wait(ms) {
+      return new Promise(resolve => window.setTimeout(resolve, ms));
+    }
+
+    async function showSequence(runId) {
+      acceptingMemoryInput = false;
+      memoryStatus.textContent = `Watch ${sequence.length} gentle glows`;
+      memoryMessage.textContent = 'Just watch for now.';
+
+      await wait(550);
+      for (const index of sequence) {
+        if (runId !== memoryRunId || activeMode !== 'memory') return;
+        const bubble = memoryGrid.children[index];
+        bubble.classList.add('glowing');
+        await wait(620);
+        bubble.classList.remove('glowing');
+        await wait(260);
+      }
+
+      if (runId !== memoryRunId || activeMode !== 'memory') return;
+      playerIndex = 0;
+      acceptingMemoryInput = true;
+      memoryStatus.textContent = 'Your turn';
+      memoryMessage.textContent = 'Tap the bubbles in the same order.';
+    }
+
+    function beginMemoryRound() {
+      memoryRunId += 1;
+      const runId = memoryRunId;
+      sequence = makeSequence(sequenceLength);
+      showSequence(runId);
+    }
+
+    function replaySequence() {
+      if (activeMode !== 'memory') return;
+      memoryRunId += 1;
+      showSequence(memoryRunId);
+    }
+
+    function handleMemoryTap(event) {
+      if (!acceptingMemoryInput) return;
+
+      const bubble = event.currentTarget;
+      const tappedIndex = Number(bubble.dataset.index);
+      const expectedIndex = sequence[playerIndex];
+
+      if (tappedIndex === expectedIndex) {
+        bubble.classList.add('correct');
+        window.setTimeout(() => bubble.classList.remove('correct'), 280);
+        playerIndex += 1;
+
+        if (playerIndex === sequence.length) {
+          acceptingMemoryInput = false;
+          memoryStatus.textContent = 'You followed it';
+          memoryMessage.textContent = 'Nice. Let your mind settle for a breath.';
+          sequenceLength = Math.min(sequenceLength + 1, 5);
+          window.setTimeout(beginMemoryRound, 1250);
+        }
+        return;
+      }
+
+      acceptingMemoryInput = false;
+      bubble.classList.add('gentle-miss');
+      window.setTimeout(() => bubble.classList.remove('gentle-miss'), 280);
+      memoryStatus.textContent = 'No problem';
+      memoryMessage.textContent = 'Nothing lost. The same sequence will play again.';
+      window.setTimeout(replaySequence, 1000);
+    }
+
+    document.getElementById('replayBtn').addEventListener('click', replaySequence);
+
+    document.querySelectorAll('.finish-btn').forEach(button => {
+      button.addEventListener('click', () => {
+        stopPopMode();
+        memoryRunId += 1;
+        acceptingMemoryInput = false;
+        activeMode = null;
+        popScreen.classList.remove('active');
+        memoryScreen.classList.remove('active');
+        menuBtn.hidden = true;
+        checkIn.classList.add('visible');
+        document.getElementById('checkInResponse').textContent = '';
+      });
+    });
+
+    document.querySelectorAll('.feeling-btn').forEach(button => {
+      button.addEventListener('click', () => {
+        const messages = {
+          lighter: 'Hold onto that small shift. You gave yourself a pause.',
+          same: 'That is okay. Staying through the moment still matters.',
+          support: 'You do not have to handle this alone. Consider reaching out to someone you trust.'
+        };
+        document.getElementById('checkInResponse').textContent = messages[button.dataset.feeling];
+      });
+    });
+  </script>
+</body>
+</html>

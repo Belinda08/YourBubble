@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Move — Your Bubble</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lobster+Two:wght@400;700&family=Nunito:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="icon" href="logo.png" type="image/x-icon">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: #2D1B5E;
+      --nav-bg: rgba(20,10,50,0.75);
+      color: #EDE8FF;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    body[data-theme="forest"]      { background: #0D2B1A; --nav-bg: rgba(5,18,10,0.8); }
+    body[data-theme="ocean"]       { background: #0D2B3A; --nav-bg: rgba(5,15,25,0.8); }
+    body[data-theme="sunset"]      { background: #3D1C1C; --nav-bg: rgba(25,8,8,0.8); }
+    body[data-theme="night"]       { background: #0A0A1A; --nav-bg: rgba(2,2,10,0.85); }
+    body[data-theme="lavender"]    { background: #3B1F3A; --nav-bg: rgba(20,8,20,0.8); }
+    body[data-theme="sunrise"]     { background: linear-gradient(135deg,#9B59F5,#FF9B4E); --nav-bg: rgba(80,20,140,0.75); }
+    body[data-theme="electric"]    { background: linear-gradient(135deg,#7B4FE0,#00E5FF); --nav-bg: rgba(40,20,120,0.75); }
+    body[data-theme="flame"]       { background: linear-gradient(135deg,#FF3B30,#FF9B4E); --nav-bg: rgba(140,20,10,0.75); }
+    body[data-theme="royal"]       { background: linear-gradient(135deg,#1A3FCC,#CC66FF); --nav-bg: rgba(10,20,100,0.75); }
+    body[data-theme="aqua"]        { background: linear-gradient(135deg,#00D4E8,#0052CC); --nav-bg: rgba(0,60,120,0.75); }
+    body[data-theme="cottoncandy"] { background: linear-gradient(135deg,#5B8EFF,#FF66CC); --nav-bg: rgba(30,40,140,0.75); }
+    body[data-theme="limesplash"]  { background: linear-gradient(135deg,#00CCE8,#FFE600); --nav-bg: rgba(0,80,80,0.75); }
+    body[data-theme="golden"]      { background: linear-gradient(135deg,#FFD000,#FF9B4E); --nav-bg: rgba(120,70,0,0.75); }
+    body[data-theme="mintcloud"]   { background: linear-gradient(135deg,#B8FFD4,#99BBFF); --nav-bg: rgba(40,100,80,0.6); }
+    body[data-theme="midnight"]    { background: linear-gradient(135deg,#000000,#2B2BE8); --nav-bg: rgba(0,0,20,0.85); }
+    body[data-theme="mystic"]      { background: linear-gradient(135deg,#9B33CC,#FFB800); --nav-bg: rgba(60,10,80,0.75); }
+    body[data-theme="meadow"]      { background: linear-gradient(135deg,#66DD44,#CCEE66); --nav-bg: rgba(30,90,10,0.7); }
+    body[data-theme="softblush"]   { background: linear-gradient(135deg,#FFFAAA,#FF99EE); --nav-bg: rgba(120,80,80,0.55); }
+
+    /* ── Navbar ── */
+    .navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 24px;
+      background: var(--nav-bg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .back-btn {
+      background: none;
+      border: none;
+      color: rgba(255,255,255,0.6);
+      font-size: 14px;
+      font-family: inherit;
+      cursor: pointer;
+      padding: 6px 10px;
+      border-radius: 8px;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .back-btn:hover {
+      background: rgba(255,255,255,0.08);
+      color: #EDE8FF;
+    }
+
+    .nav-logo {
+      font-family: 'Lobster Two', sans-serif;
+      font-size: 22px;
+      color: #EDE8FF;
+    }
+
+    /* ── Main container ── */
+    .container {
+      flex: 1;
+      max-width: 680px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 40px 24px 48px;
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+
+    /* ── Header ── */
+    .page-header {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .page-title {
+      font-size: 32px;
+      font-weight: 300;
+      color: #EDE8FF;
+      letter-spacing: -0.01em;
+    }
+
+    .page-subtitle {
+      font-size: 15px;
+      color: rgba(255,255,255,0.5);
+    }
+
+    /* ── Category grid ── */
+    .category-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .category-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      padding: 24px 16px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 18px;
+      color: #EDE8FF;
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s, transform 0.15s;
+      text-align: center;
+    }
+
+    .category-btn:hover {
+      background: rgba(255,255,255,0.13);
+      border-color: rgba(255,255,255,0.25);
+      transform: translateY(-2px);
+    }
+
+    .category-btn.active {
+      background: rgba(107,79,191,0.45);
+      border-color: rgba(155,138,212,0.6);
+    }
+
+    .category-emoji {
+      font-size: 32px;
+      line-height: 1;
+    }
+
+    /* ── Timer section ── */
+    .timer-section {
+      display: none;
+      flex-direction: column;
+      gap: 24px;
+      animation: fadeUp 0.3s ease;
+    }
+
+    .timer-section.visible { display: flex; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .timer-heading {
+      font-size: 18px;
+      font-weight: 500;
+      color: #EDE8FF;
+      text-align: center;
+    }
+
+    .motivation {
+      font-size: 15px;
+      color: rgba(255,255,255,0.55);
+      text-align: center;
+      font-style: italic;
+      line-height: 1.5;
+    }
+
+    /* ── Duration picker ── */
+    .duration-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .duration-btn {
+      padding: 14px 8px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 12px;
+      color: rgba(255,255,255,0.7);
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s, color 0.2s;
+      text-align: center;
+    }
+
+    .duration-btn:hover {
+      background: rgba(255,255,255,0.12);
+      color: #EDE8FF;
+    }
+
+    .duration-btn.selected {
+      background: rgba(107,79,191,0.5);
+      border-color: rgba(155,138,212,0.6);
+      color: #EDE8FF;
+    }
+.custom-duration-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 14px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 12px;
+  grid-column: span 3;
+}
+
+.custom-mins-input {
+  flex: 1;
+  background: none;
+  border: none;
+  color: #EDE8FF;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  outline: none;
+  width: 100%;
+}
+
+.custom-mins-input::placeholder {
+  color: rgba(255,255,255,0.3);
+}
+
+.custom-mins-input::-webkit-inner-spin-button,
+.custom-mins-input::-webkit-outer-spin-button {
+  opacity: 0.4;
+}
+
+.custom-mins-label {
+  color: rgba(255,255,255,0.4);
+  font-size: 13px;
+}
+
+    /* ── Start button ── */
+    .start-btn {
+      padding: 15px;
+      background: #6B4FBF;
+      border: none;
+      border-radius: 14px;
+      color: #EDE8FF;
+      font-family: inherit;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+      letter-spacing: 0.02em;
+    }
+
+    .start-btn:hover {
+      background: #4E3DA8;
+      transform: translateY(-1px);
+    }
+
+    .start-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* ── Active timer ── */
+    .active-timer {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 28px;
+      padding: 32px 24px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 22px;
+      animation: fadeUp 0.3s ease;
+    }
+
+    .active-timer.visible { display: flex; }
+
+    .timer-display {
+      font-size: 72px;
+      font-weight: 300;
+      color: #EDE8FF;
+      letter-spacing: -0.02em;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .timer-activity {
+      font-size: 16px;
+      color: rgba(255,255,255,0.5);
+      text-align: center;
+    }
+
+    .timer-motivation-live {
+      font-size: 15px;
+      color: rgba(255,255,255,0.6);
+      font-style: italic;
+      text-align: center;
+      line-height: 1.5;
+    }
+
+    /* ── Progress ring ── */
+    .progress-ring-wrap {
+      position: relative;
+      width: 180px;
+      height: 180px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .progress-ring-wrap svg {
+      position: absolute;
+      top: 0; left: 0;
+      transform: rotate(-90deg);
+    }
+
+    .progress-ring-bg {
+      fill: none;
+      stroke: rgba(255,255,255,0.08);
+      stroke-width: 4;
+    }
+
+    .progress-ring-fill {
+      fill: none;
+      stroke: #9B8AD4;
+      stroke-width: 4;
+      stroke-linecap: round;
+      transition: stroke-dashoffset 1s linear;
+    }
+
+    /* ── Timer controls ── */
+    .timer-controls {
+      display: flex;
+      gap: 12px;
+      width: 100%;
+    }
+
+    .btn-pause, .btn-stop {
+      flex: 1;
+      padding: 12px;
+      border-radius: 12px;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-pause {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: #EDE8FF;
+    }
+
+    .btn-pause:hover { background: rgba(255,255,255,0.14); }
+
+    .btn-stop {
+      background: rgba(180,80,80,0.2);
+      border: 1px solid rgba(244,164,164,0.3);
+      color: #F4A4A4;
+    }
+
+    .btn-stop:hover { background: rgba(180,80,80,0.35); }
+
+    /* ── Done screen ── */
+    .done-screen {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      padding: 32px 24px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 22px;
+      text-align: center;
+      animation: fadeUp 0.3s ease;
+    }
+
+    .done-screen.visible { display: flex; }
+
+    .done-icon { font-size: 48px; }
+
+    .done-title {
+      font-size: 24px;
+      font-weight: 500;
+      color: #EDE8FF;
+    }
+
+    .done-sub {
+      font-size: 14px;
+      color: rgba(255,255,255,0.5);
+      line-height: 1.6;
+    }
+
+    .btn-again {
+      padding: 12px 28px;
+      background: #6B4FBF;
+      border: none;
+      border-radius: 20px;
+      color: #EDE8FF;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-top: 4px;
+    }
+
+    .btn-again:hover { background: #4E3DA8; }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <button class="back-btn" onclick="window.location.href='Your_Bubble.html'">← Back</button>
+    <div class="nav-logo">Your Bubble</div>
+    <div style="width:60px"></div>
+  </nav>
+
+  <div class="container">
+
+    <!-- Header -->
+    <div class="page-header">
+      <h1 class="page-title">Let's move 🏃</h1>
+      <p class="page-subtitle">Pick what feels right for you today.</p>
+    </div>
+
+    <!-- Category grid -->
+    <div class="category-grid" id="categoryGrid">
+      <button class="category-btn" data-category="walk">
+        <span class="category-emoji">🚶</span>
+        Take a Walk
+      </button>
+      <button class="category-btn" data-category="stretch">
+        <span class="category-emoji">🧘</span>
+        Stretch
+      </button>
+      <button class="category-btn" data-category="dance">
+        <span class="category-emoji">💃</span>
+        Dance
+      </button>
+      <button class="category-btn" data-category="move">
+        <span class="category-emoji">💪</span>
+        Move Your Body
+      </button>
+      <button class="category-btn" data-category="other" style="grid-column: span 2;">
+        <span class="category-emoji">✨</span>
+        Other
+      </button>
+    </div>
+
+    <!-- Timer section (shown after category selected) -->
+    <div class="timer-section" id="timerSection">
+      <div class="timer-heading" id="timerHeading"></div>
+      <div class="motivation" id="motivationText"></div>
+
+      <div class="duration-grid">
+        <button class="duration-btn" data-mins="1">1 min</button>
+        <button class="duration-btn" data-mins="5">5 min</button>
+        <button class="duration-btn" data-mins="10">10 min</button>
+        <button class="duration-btn" data-mins="15">15 min</button>
+        <button class="duration-btn" data-mins="20">20 min</button>
+        <button class="duration-btn" data-mins="30">30 min</button>
+      </div>
+        <div class="custom-duration-wrap">
+        <input
+            type="number"
+            id="customMins"
+            class="custom-mins-input"
+            placeholder="Custom"
+            min="1"
+            max="180">
+        <span class="custom-mins-label">min</span>
+        </div>
+      <button class="start-btn" id="startBtn" disabled>Choose a duration first</button>
+    </div>
+
+    <!-- Active timer -->
+    <div class="active-timer" id="activeTimer">
+      <div class="timer-activity" id="timerActivity"></div>
+      <div class="progress-ring-wrap">
+        <svg width="180" height="180" viewBox="0 0 180 180">
+          <circle class="progress-ring-bg" cx="90" cy="90" r="82"/>
+          <circle class="progress-ring-fill" id="progressRing" cx="90" cy="90" r="82"/>
+        </svg>
+        <div class="timer-display" id="timerDisplay">0:00</div>
+      </div>
+      <div class="timer-motivation-live" id="timerMotivationLive"></div>
+      <div class="timer-controls">
+        <button class="btn-pause" id="pauseBtn">Pause</button>
+        <button class="btn-stop" id="stopBtn">Stop</button>
+      </div>
+    </div>
+
+    <!-- Done screen -->
+    <div class="done-screen" id="doneScreen">
+      <div class="done-icon">🎉</div>
+      <div class="done-title">You did it!</div>
+      <div class="done-sub" id="doneSub"></div>
+      <button class="btn-again" id="againBtn">Move again</button>
+    </div>
+
+  </div>
+
+  <script>
+    // ── Theme ─────────────────────────────────────────
+    document.body.dataset.theme = localStorage.getItem('theme') || 'default';
+
+    // ── Category data ─────────────────────────────────
+    const categories = {
+      walk: {
+        label: '🚶 Take a Walk',
+        motivations: [
+          "Every step forward is progress. Just start.",
+          "Fresh air is medicine. You deserve it.",
+          "One foot in front of the other. That's all.",
+          "A walk clears the mind. You've got this.",
+        ],
+        done: "You walked. Your body and mind thank you. 💜"
+      },
+      stretch: {
+        label: '🧘 Stretch',
+        motivations: [
+          "Let your body breathe. You carry a lot.",
+          "Gentle movement is still movement.",
+          "Stretch out the tension. You deserve ease.",
+          "This is your moment to slow down.",
+        ],
+        done: "You stretched and showed up for your body. 🌿"
+      },
+      dance: {
+        label: '💃 Dance',
+        motivations: [
+          "Put on your favorite song and just move.",
+          "Nobody's watching. Let yourself go.",
+          "Joy lives in your body. Wake it up.",
+          "Dance like it's just you and the music.",
+        ],
+        done: "You danced! That takes courage and joy. ✨"
+      },
+      move: {
+        label: '💪 Move Your Body',
+        motivations: [
+          "You don't need a gym. Just move.",
+          "Any movement counts. You're already doing it.",
+          "Your body is capable of more than you think.",
+          "Start small. Keep going. You've got this.",
+        ],
+        done: "You moved your body. That's everything today. 💪"
+      },
+      other: {
+        label: '✨ Something Else',
+        motivations: [
+          "Whatever you choose — it counts.",
+          "You know what your body needs. Trust that.",
+          "There's no wrong way to move.",
+          "The first step is always the hardest. You did it.",
+        ],
+        done: "You moved in your own way. That matters. 💜"
+      },
+    };
+
+    // ── State ─────────────────────────────────────────
+    let selectedCategory = null;
+    let selectedMins     = null;
+    let totalSeconds     = 0;
+    let remainingSeconds = 0;
+    let timerInterval    = null;
+    let isPaused         = false;
+
+    const circumference = 2 * Math.PI * 82;
+    document.getElementById('progressRing').style.strokeDasharray = circumference;
+    document.getElementById('progressRing').style.strokeDashoffset = 0;
+
+    // ── Category selection ────────────────────────────
+    document.querySelectorAll('.category-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+
+        selectedCategory = this.dataset.category;
+        const cat = categories[selectedCategory];
+
+        // Reset duration selection
+        selectedMins = null;
+        document.querySelectorAll('.duration-btn').forEach(b => b.classList.remove('selected'));
+        const startBtn = document.getElementById('startBtn');
+        startBtn.disabled = true;
+        startBtn.textContent = 'Choose a duration first';
+
+        // Show timer section
+        document.getElementById('timerHeading').textContent = cat.label;
+        const randMotivation = cat.motivations[Math.floor(Math.random() * cat.motivations.length)];
+        document.getElementById('motivationText').textContent = randMotivation;
+
+        document.getElementById('timerSection').classList.add('visible');
+        document.getElementById('activeTimer').classList.remove('visible');
+        document.getElementById('doneScreen').classList.remove('visible');
+
+        // Scroll to timer section
+        document.getElementById('timerSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+
+    // ── Duration selection ────────────────────────────
+    document.querySelectorAll('.duration-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.duration-btn').forEach(b => b.classList.remove('selected'));
+        this.classList.add('selected');
+        selectedMins = parseInt(this.dataset.mins);
+
+        const startBtn = document.getElementById('startBtn');
+        startBtn.disabled = false;
+        startBtn.textContent = `Start ${selectedMins} minute${selectedMins > 1 ? 's' : ''} →`;
+      });
+    });
+
+    // ── Start timer ───────────────────────────────────
+    document.getElementById('startBtn').addEventListener('click', () => {
+      if (!selectedMins || !selectedCategory) return;
+
+      totalSeconds     = selectedMins * 60;
+      remainingSeconds = totalSeconds;
+      isPaused         = false;
+
+      const cat = categories[selectedCategory];
+      document.getElementById('timerActivity').textContent = cat.label;
+      const randMotivation = cat.motivations[Math.floor(Math.random() * cat.motivations.length)];
+      document.getElementById('timerMotivationLive').textContent = randMotivation;
+
+      document.getElementById('timerSection').classList.remove('visible');
+      document.getElementById('activeTimer').classList.add('visible');
+      document.getElementById('doneScreen').classList.remove('visible');
+
+      updateTimerDisplay();
+      updateProgressRing();
+
+      timerInterval = setInterval(tick, 1000);
+
+      document.getElementById('activeTimer').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+
+    function tick() {
+      if (isPaused) return;
+      remainingSeconds--;
+      updateTimerDisplay();
+      updateProgressRing();
+      if (remainingSeconds <= 0) {
+        clearInterval(timerInterval);
+        showDone();
+      }
+    }
+
+    function updateTimerDisplay() {
+      const m = Math.floor(remainingSeconds / 60);
+      const s = remainingSeconds % 60;
+      document.getElementById('timerDisplay').textContent =
+        `${m}:${s.toString().padStart(2, '0')}`;
+    }
+
+    function updateProgressRing() {
+      const progress  = remainingSeconds / totalSeconds;
+      const offset    = circumference * (1 - progress);
+      document.getElementById('progressRing').style.strokeDashoffset = offset;
+    }
+
+    // ── Pause ─────────────────────────────────────────
+    document.getElementById('pauseBtn').addEventListener('click', () => {
+      isPaused = !isPaused;
+      document.getElementById('pauseBtn').textContent = isPaused ? 'Resume' : 'Pause';
+    });
+
+    // ── Stop ──────────────────────────────────────────
+    document.getElementById('stopBtn').addEventListener('click', () => {
+      clearInterval(timerInterval);
+      resetToCategories();
+    });
+
+    function resetToCategories() {
+      document.getElementById('activeTimer').classList.remove('visible');
+      document.getElementById('doneScreen').classList.remove('visible');
+      document.getElementById('timerSection').classList.remove('visible');
+      document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+      selectedCategory = null;
+      selectedMins     = null;
+    }
+
+    // ── Done ──────────────────────────────────────────
+    function showDone() {
+      document.getElementById('activeTimer').classList.remove('visible');
+      document.getElementById('doneScreen').classList.add('visible');
+      document.getElementById('doneSub').textContent =
+        categories[selectedCategory].done;
+      document.getElementById('doneScreen').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    document.getElementById('againBtn').addEventListener('click', () => {
+      resetToCategories();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+    document.getElementById('customMins').addEventListener('input', function() {
+  const val = parseInt(this.value);
+  if (!val || val < 1) return;
+
+  // Deselect preset buttons
+  document.querySelectorAll('.duration-btn').forEach(b => b.classList.remove('selected'));
+
+  selectedMins = val;
+  const startBtn = document.getElementById('startBtn');
+  startBtn.disabled = false;
+  startBtn.textContent = `Start ${val} minute${val > 1 ? 's' : ''} →`;
+});
+  </script>
+</body>
+</html>

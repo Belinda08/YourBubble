@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Journal — Your Bubble</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lobster+Two:ital,wght@0,400;0,700&family=Nunito:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="icon" href="logo.png" type="image/x-icon">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: #2D1B5E;
+      color: #EDE8FF;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Navbar ── */
+    .navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 24px;
+      background: rgba(20, 10, 50, 0.75);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .back-btn {
+      background: none;
+      border: none;
+      color: rgba(255,255,255,0.6);
+      font-size: 20px;
+      cursor: pointer;
+      padding: 6px 10px;
+      border-radius: 8px;
+      transition: background 0.2s, color 0.2s;
+      font-family: inherit;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+    }
+
+    .back-btn:hover {
+      background: rgba(255,255,255,0.08);
+      color: #EDE8FF;
+    }
+
+    .nav-logo {
+      font-family: 'Lobster Two', sans-serif;
+      font-size: 22px;
+      color: #EDE8FF;
+    }
+ /* ── Divider ── */
+    .divider {
+      border: none;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      margin: 4px 0;
+    }
+    body { background: #2D1B5E; }
+body[data-theme="forest"]      { background: #0D2B1A; }
+body[data-theme="ocean"]       { background: #0D2B3A; }
+body[data-theme="sunset"]      { background: #3D1C1C; }
+body[data-theme="night"]       { background: #0A0A1A; }
+body[data-theme="lavender"]    { background: #3B1F3A; }
+body[data-theme="sunrise"]     { background: linear-gradient(135deg,#9B59F5,#FF9B4E); }
+body[data-theme="electric"]    { background: linear-gradient(135deg,#7B4FE0,#00E5FF); }
+body[data-theme="flame"]       { background: linear-gradient(135deg,#FF3B30,#FF9B4E); }
+body[data-theme="royal"]       { background: linear-gradient(135deg,#1A3FCC,#CC66FF); }
+body[data-theme="aqua"]        { background: linear-gradient(135deg,#00D4E8,#0052CC); }
+body[data-theme="cottoncandy"] { background: linear-gradient(135deg,#5B8EFF,#FF66CC); }
+body[data-theme="limesplash"]  { background: linear-gradient(135deg,#00CCE8,#FFE600); }
+body[data-theme="golden"]      { background: linear-gradient(135deg,#FFD000,#FF9B4E); }
+body[data-theme="mintcloud"]   { background: linear-gradient(135deg,#B8FFD4,#99BBFF); }
+body[data-theme="midnight"]    { background: linear-gradient(135deg,#000000,#2B2BE8); }
+body[data-theme="mystic"]      { background: linear-gradient(135deg,#9B33CC,#FFB800); }
+body[data-theme="meadow"]      { background: linear-gradient(135deg,#66DD44,#CCEE66); }
+body[data-theme="softblush"]   { background: linear-gradient(135deg,#FFFAAA,#FF99EE); }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <button class="back-btn" onclick="window.location.href='Your_Bubble.html'">
+      ← Back
+    </button>
+    <div class="nav-logo">Your Bubble</div>
+    <div class="nav-date" id="todayDate"></div>
+  </nav>
+
+<script>
+
+</script>
+</body>
+</html>
